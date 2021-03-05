@@ -2,7 +2,7 @@
 use strict;
 use warnings;
 
-use feature qw/ say /;
+use feature qw/ say state /;
 use DateTime;
 use Time::Piece;
 
@@ -19,9 +19,8 @@ while (<$HAMSTER>) {
     next if /^READY/;
     my ($time, $millis, $count) = /^([^.]+)\.(\d+)\s+(\d+)\s*$/;
 
-    my $date = Time::Piece->strptime($time, '%Y-%m-%d %H:%M:%S');
-
-    $date = $date->epoch + $millis/1_000_000;
+    #my $date = Time::Piece->strptime($time, '%Y-%m-%d %H:%M:%S')->epoch + $millis/1_000_000;
+    my $date = my_epoch_parser( $time ) + $millis/1_000_000;
 
     if ( ! @current ) {
         push @current, $date;
@@ -94,3 +93,20 @@ printf "Runner: %6.2f km (%5d %5.2f) %s -- %s\n",
     $tot_laps * 3.14 * 0.2 / 1000,
     $tot_laps, $tot_seconds/3600,
     DateTime->from_epoch(epoch => $start)->iso8601, DateTime->from_epoch(epoch => $prev)->iso8601;
+
+
+
+sub my_epoch_parser {
+    my $time = shift;
+    state $epoch_base;
+    my ($year, $month, $day, $hour, $minute, $second) = $time =~ /(\d+)-(\d+)-(\d+) (\d+):(\d+):(\d+)$/;
+    if ( !ref($epoch_base) || $epoch_base->{month} != $month) {
+        my $start = Time::Piece->strptime("$year-$month-01 00:00:00", '%Y-%m-%d %H:%M:%S');
+        $epoch_base = {
+            year => $year,
+            month => $month,
+            base => $start->epoch,
+        }
+    }
+    return $epoch_base->{base} + ($day-1)*86400 + $hour*3600 + $minute*60 + $second;
+}
