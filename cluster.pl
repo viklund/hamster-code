@@ -62,7 +62,7 @@ if ( @current ) {
 ### Since it most probably starts with the weight down, the first instance is a
 ### half lap. So we need to detect every "session" and then for every session
 ### remove 0.5.
-my $DAY_CUTOFF = 10000;
+my $DAY_CUTOFF = 3600;
 my $SESSION_CUTOFF = 1;
 
 my $tot_laps = 0;
@@ -71,36 +71,39 @@ my $tot_seconds = 0;
 my ($prev, $start);
 for my $t (@times) {
     if ( ! @current ) {
-        $start = $t;
-        $prev = $t;
         @current = ($t);
+        $prev = $start = $t;
         next;
     }
     my $cdiff = cdiff( $t, $current[-1] );
     if ( $cdiff <= $SESSION_CUTOFF ) {
         push @current, $t;
+        $prev = $t;
+        next;
     }
     elsif ( $cdiff > $DAY_CUTOFF ) {
-        printf "Runner: %6.2f km (%5d %5.2f) %s %s\n",
+        printf "Runner: %6.2f km (%5d %5.2f) %s -- %s\n",
             $tot_laps * 3.14 * 0.2 / 1000,
             $tot_laps, $tot_seconds/3600,
             $start->iso8601, $prev->iso8601;
         $tot_laps = 0;
         $tot_seconds = 0;
         $start = $t;
-        @current = ($t);
     }
     elsif ( @current > 1 ) {
         my $laps = @current - 0.5;
         $tot_laps += $laps;
         my $s = cdiff($current[$#current], $current[0]);
         $tot_seconds += $s;
-        @current = ($t);
     }
+    @current = ($t);
     $prev = $t;
 }
 
-printf "Runner: %6.2f km (%5d %5.2f)\n", $tot_laps * 3.14 * 0.2 / 1000, $tot_laps, $tot_seconds/3600;
+printf "Runner: %6.2f km (%5d %5.2f) %s -- %s\n",
+    $tot_laps * 3.14 * 0.2 / 1000,
+    $tot_laps, $tot_seconds/3600,
+    $start->iso8601, $prev->iso8601;
 #printf "Naive calculation: %6.2f km\n", scalar(@times) * 3.14 * 0.2 / 1000;
 #printf "Smart calculation: %6.2f km\n", $tot_laps * 3.14 * 0.2 / 1000;
 
