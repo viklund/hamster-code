@@ -3,7 +3,6 @@ use strict;
 use warnings;
 
 use feature qw/ say state /;
-use DateTime;
 use Time::Piece;
 
 use List::Util qw/ sum /;
@@ -75,7 +74,8 @@ for my $t (@times) {
         printf "Runner: %6.2f km (%5d %5.2f) %s -- %s\n",
             $tot_laps * 3.14 * 0.2 / 1000,
             $tot_laps, $tot_seconds/3600,
-            DateTime->from_epoch(epoch => $start)->iso8601, DateTime->from_epoch(epoch => $prev)->iso8601;
+            Time::Piece->strptime(int($start), '%s')->datetime,
+            Time::Piece->strptime(int($prev), '%s')->datetime;
         $tot_laps = 0;
         $tot_seconds = 0;
         $start = $t;
@@ -93,7 +93,8 @@ for my $t (@times) {
 printf "Runner: %6.2f km (%5d %5.2f) %s -- %s\n",
     $tot_laps * 3.14 * 0.2 / 1000,
     $tot_laps, $tot_seconds/3600,
-    DateTime->from_epoch(epoch => $start)->iso8601, DateTime->from_epoch(epoch => $prev)->iso8601;
+    Time::Piece->strptime(int($start), '%s')->datetime,
+    Time::Piece->strptime(int($prev), '%s')->datetime;
 
 
 
