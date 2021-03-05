@@ -13,7 +13,6 @@ my $CUTOFF = 0.34; # Valley from stats
 
 my @times = ();
 my @current = ();
-<$HAMSTER>;
 while (<$HAMSTER>) {
     # 2021-03-04 06:32:28.177878  35520   
     #my ($time, $millis, $count) = /^([^.]+)\.(\d+)\s+(\d+)\s*$/;
