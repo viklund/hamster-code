@@ -19,6 +19,6 @@ def count():
 
 button.when_pressed = count
 
-print("READY")
+sys.stderr.write("READY\n")
 sys.stdout.flush()
 pause()
