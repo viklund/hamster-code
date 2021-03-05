@@ -3,8 +3,8 @@ use strict;
 use warnings;
 
 use feature qw/ say /;
-use Data::Dumper;
 use DateTime;
+use Time::Piece;
 
 use List::Util qw/ sum /;
 
@@ -17,18 +17,9 @@ my @current = ();
 while (<$HAMSTER>) {
     # 2021-03-04 06:32:28.177878  35520   
     next if /^READY/;
-    my ($year, $month, $day, $hour, $minute, $second, $millis, $count) = /^(\d+)-(\d+)-(\d+) (\d+):(\d+):(\d+)\.(\d+)\s+(\d+)\s*$/;
+    my ($time, $millis, $count) = /^([^.]+)\.(\d+)\s+(\d+)\s*$/;
 
-    my $date = DateTime->new(
-        year => $year,
-        month => $month,
-        day => $day,
-        hour => $hour,
-        minute => $minute,
-        second => $second,
-        nanosecond => $millis*1000,
-        time_zone => 'floating',
-    );
+    my $date = Time::Piece->strptime($time, '%Y-%m-%d %H:%M:%S');
 
     $date = $date->epoch + $millis/1_000_000;
 
