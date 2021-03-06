@@ -14,5 +14,5 @@ sudo systemctl start log-hamster-wheel
 # Copy logs from hamsterpi
 
 ```bash
-rsync pi@hamsterpi:hamster-code/logs .
+rsync -rv pi@hamsterpi.local:hamster-code/logs .
 ```
