@@ -1,0 +1,14 @@
+[Unit]
+Description=Log hamster wheel spinner
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/python2 -u log-hamster-wheel.py
+WorkingDirectory=/home/pi/hamster-code
+StandardOutput=inherit
+StandardError=inherit
+Restart=always
+User=pi
+
+[Install]
+WantedBy=multi-user.target
