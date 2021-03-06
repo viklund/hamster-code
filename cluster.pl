@@ -70,9 +70,10 @@ for my $t (@times) {
         next;
     }
     elsif ( $cdiff > $DAY_CUTOFF ) {
-        printf "Runner: %6.2f km (%5d %5.2f) %s -- %s\n",
+        my $hours = int($tot_seconds/3600);
+        printf "%6.2f km (%5d %2d:%2d)  |  %s -- %s\n",
             $tot_laps * 3.14 * 0.2 / 1000,
-            $tot_laps, $tot_seconds/3600,
+            $tot_laps, $hours, ($tot_seconds-$hours*3600)/60,
             Time::Piece->strptime(int($start), '%s')->datetime,
             Time::Piece->strptime(int($prev), '%s')->datetime;
         $tot_laps = 0;
@@ -89,9 +90,10 @@ for my $t (@times) {
     $prev = $t;
 }
 
-printf "Runner: %6.2f km (%5d %5.2f) %s -- %s\n",
+my $hours = int($tot_seconds/3600);
+printf "%6.2f km (%5d %2d:%2d)  |  %s -- %s\n",
     $tot_laps * 3.14 * 0.2 / 1000,
-    $tot_laps, $tot_seconds/3600,
+    $tot_laps, $hours, ($tot_seconds-$hours*3600)/60,
     Time::Piece->strptime(int($start), '%s')->datetime,
     Time::Piece->strptime(int($prev), '%s')->datetime;
 
