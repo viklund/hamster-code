@@ -73,7 +73,8 @@ for my $t (@times) {
             $tot_laps * 3.14 * 0.2 / 1000,
             $tot_laps, $hours, ($tot_seconds-$hours*3600)/60,
             Time::Piece->strptime(int($start), '%s')->datetime,
-            Time::Piece->strptime(int($prev), '%s')->datetime;
+            Time::Piece->strptime(int($prev), '%s')->datetime
+            if $tot_laps > 1;
         $tot_laps = 0;
         $tot_seconds = 0;
         $start = $t;
@@ -93,4 +94,4 @@ printf "%6.2f km (%5d %2d:%2d)  |  %s -- %s\n",
     $tot_laps * 3.14 * 0.2 / 1000,
     $tot_laps, $hours, ($tot_seconds-$hours*3600)/60,
     Time::Piece->strptime(int($start), '%s')->datetime,
-    Time::Piece->strptime(int($prev), '%s')->datetime;
+    Time::Piece->strptime(int($prev), '%s')->datetime
