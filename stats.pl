@@ -7,25 +7,23 @@ use Time::Piece;
 
 use List::Util qw/ sum /;
 
-open my $HAMSTER, '<', 'hamster-spinner.log' or die;
-
 my %counts;
 
 my @times = ();
 my $last;
-while (<$HAMSTER>) {
-    # 2021-03-04 06:32:28.177878  35520   
-    next if /^READY/;
-    my ($time, $millis) = unpack("A19xA6",$_);
-    my $date = my_epoch_parser( $time ) + $millis/1_000_000;
+for my $file (glob("logs/*.log")) {
+    open my $HAMSTER, '<', $file or die "Could not open $file: $!, $?";
+    while (my $date = <$HAMSTER>) {
+        chomp($date);
 
-    push @times, $date;
-    if ( $last ) {
-        my $seconds = $date - $last;
-        $counts{ sprintf("%.02f", $seconds) }++;
-    }
-    $last = $date;
-} 
+        push @times, $date;
+        if ( $last ) {
+            my $seconds = $date - $last;
+            $counts{ sprintf("%.02f", $seconds) }++;
+        }
+        $last = $date;
+    } 
+}
 
 for my $diff ( sort { $a <=> $b } keys %counts ) {
     last if $diff > 3; # If time is more than 10 seconds, skip
