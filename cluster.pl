@@ -69,7 +69,7 @@ for my $t (@times) {
     }
     elsif ( $cdiff > $DAY_CUTOFF ) {
         my $hours = int($tot_seconds/3600);
-        printf "%6.2f km (%5d %2d:%2d)  |  %s -- %s\n",
+        printf "%6.2f km (%5d %2d:%02d)  |  %s -- %s\n",
             $tot_laps * 3.14 * 0.2 / 1000,
             $tot_laps, $hours, ($tot_seconds-$hours*3600)/60,
             Time::Piece->strptime(int($start), '%s')->datetime,
@@ -90,7 +90,7 @@ for my $t (@times) {
 }
 
 my $hours = int($tot_seconds/3600);
-printf "%6.2f km (%5d %2d:%2d)  |  %s -- %s\n",
+printf "%6.2f km (%5d %2d:%02d)  |  %s -- %s\n",
     $tot_laps * 3.14 * 0.2 / 1000,
     $tot_laps, $hours, ($tot_seconds-$hours*3600)/60,
     Time::Piece->strptime(int($start), '%s')->datetime,
