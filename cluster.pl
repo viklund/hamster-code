@@ -68,13 +68,7 @@ for my $t (@times) {
         next;
     }
     elsif ( $cdiff > $DAY_CUTOFF ) {
-        my $hours = int($tot_seconds/3600);
-        printf "%6.2f km (%5d %2d:%02d)  |  %s -- %s\n",
-            $tot_laps * 3.14 * 0.2 / 1000,
-            $tot_laps, $hours, ($tot_seconds-$hours*3600)/60,
-            Time::Piece->strptime(int($start), '%s')->datetime,
-            Time::Piece->strptime(int($prev), '%s')->datetime
-            if $tot_laps > 1;
+        display_stats();
         $tot_laps = 0;
         $tot_seconds = 0;
         $start = $t;
@@ -89,9 +83,14 @@ for my $t (@times) {
     $prev = $t;
 }
 
-my $hours = int($tot_seconds/3600);
-printf "%6.2f km (%5d %2d:%02d)  |  %s -- %s\n",
-    $tot_laps * 3.14 * 0.2 / 1000,
-    $tot_laps, $hours, ($tot_seconds-$hours*3600)/60,
-    Time::Piece->strptime(int($start), '%s')->datetime,
-    Time::Piece->strptime(int($prev), '%s')->datetime
+display_stats();
+
+sub display_stats {
+    my $hours = int($tot_seconds/3600);
+    printf "%6.2f km (%5d %2d:%02d)  |  %s -- %s\n",
+        $tot_laps * 3.14 * 0.2 / 1000,
+        $tot_laps, $hours, ($tot_seconds-$hours*3600)/60,
+        Time::Piece->strptime(int($start), '%s')->datetime,
+        Time::Piece->strptime(int($prev), '%s')->datetime
+        if $tot_laps > 1
+}
