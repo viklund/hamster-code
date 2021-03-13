@@ -8,7 +8,8 @@ use List::Util qw/ sum /;
 use Time::Piece;
 use Time::Seconds;
 
-my $CUTOFF = 0.34; # Valley from stats
+my $CUTOFF = 0.40; # Valley from stats
+my $FILE_FORMAT = 'days/counter-%Y%m%d.log';
 
 my @times = ();
 my @current = ();
@@ -52,13 +53,13 @@ if ( $times[0] > $next_day ) {
     ($start_day, $next_day) = ($next_day, $next_day+ONE_DAY);
 }
 
-open my $OUT, '>', localtime($start_day)->strftime("days/%Y%m%d.log");
+open my $OUT, '>', localtime($start_day)->strftime($FILE_FORMAT);
 
 for my $t (@times) {
     if ( $t > $next_day ) {
         ($start_day, $next_day) = ($next_day, $next_day+ONE_DAY);
         close $OUT;
-        open $OUT, '>', localtime($start_day)->strftime("days/%Y%m%d.log");
+        open $OUT, '>', localtime($start_day)->strftime($FILE_FORMAT);
     }
     say $OUT $t;
 }
