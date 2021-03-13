@@ -1,0 +1,20 @@
+ifile = sprintf("days/speed-%s.log", date)
+ofile = sprintf("plots/speed-%s.png", date)
+
+set xdata time
+set timefmt "%s"
+set format x "%H:%M"
+
+set term pngcairo size 1500,200 rounded background 'black'
+set output ofile
+set margins 2.5,2.5,1.4,0.5
+
+set border 3 lc 'orange'
+
+set xtics nomirror
+set ytics border nomirror 50,50,200 in left offset character 2,0
+set yrange [0:200]
+set grid lc rgb 'orange'
+set lt 1 lw 1 lc rgb 'dark-orange' pointtype 6
+
+plot ifile u 1:2 w lines not
