@@ -10,9 +10,9 @@ use feature qw/ say /;
 ### remove 0.5.
 
 
-for my $file (glob('days/*.log')) {
+for my $file (glob('days/counter-*.log')) {
     open my $FILE, '<', $file or die "Could not read $file: $!, $?";
-    my ($date) = $file =~ m{^ days/ (\d+) \.log $}x;
+    my ($date) = $file =~ m{^ days/ [^0-9]+ (\d+) \.log $}x;
     my $stats = calculate($FILE);
     display_stats($stats->{laps}, $stats->{seconds}, $date);
 }
