@@ -23,8 +23,8 @@ for my $file (glob('days/counter-*.log')) {
     my $minutes =  ($stats->{seconds}-$hours*3600)/60;
     push @all_stats, {
         $date => {
-            km => $stats->{laps} * 3.14 * 0.2 / 1000,
-            laps => $stats->{laps},
+            km   => sprintf("%.2f", $stats->{laps} * 3.14 * 0.2 / 1000),
+            laps => sprintf("%.0f", $stats->{laps}),
             time => sprintf("%d:%02d", $hours, $minutes),
         }
     }
