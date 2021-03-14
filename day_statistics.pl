@@ -5,17 +5,34 @@ use warnings;
 
 use feature qw/ say /;
 
+use YAML;
+
 ### Since it most probably starts with the weight down, the first instance is a
 ### half lap. So we need to detect every "session" and then for every session
 ### remove 0.5.
 
+my @all_stats;
 
 for my $file (glob('days/counter-*.log')) {
     open my $FILE, '<', $file or die "Could not read $file: $!, $?";
     my ($date) = $file =~ m{^ days/ [^0-9]+ (\d+) \.log $}x;
     my $stats = calculate($FILE);
-    display_stats($stats->{laps}, $stats->{seconds}, $date);
+    #display_stats($stats->{laps}, $stats->{seconds}, $date);
+
+    my $hours = int($stats->{seconds}/3600);
+    my $minutes =  ($stats->{seconds}-$hours*3600)/60;
+    push @all_stats, {
+        $date => {
+            km => $stats->{laps} * 3.14 * 0.2 / 1000,
+            laps => $stats->{laps},
+            time => sprintf("%d:%02d", $hours, $minutes),
+        }
+    }
 }
+
+@all_stats = sort { (keys %$a)[0] cmp (keys %$b)[0] } @all_stats;
+
+print Dump(\@all_stats);
 
 
 sub calculate {
@@ -58,10 +75,10 @@ sub calculate {
 sub display_stats {
     my ($tot_laps, $tot_seconds, $date) = @_;
     my $hours = int($tot_seconds/3600);
-    printf "%6.2f km (%5d %2d:%02d)  |  %s\n",
+    printf "%s  |  %6.2f km (%5d %2d:%02d)\n",
+        $date,
         $tot_laps * 3.14 * 0.2 / 1000,
         $tot_laps, $hours, ($tot_seconds-$hours*3600)/60,
-        $date,
         #Time::Piece->strptime(, '%s')->datetime,
         #Time::Piece->strptime(int($prev), '%s')->datetime
         #if $tot_laps > 1
