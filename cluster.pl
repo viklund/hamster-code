@@ -63,3 +63,10 @@ for my $t (@times) {
     }
     say $OUT $t;
 }
+
+my $now = localtime;
+my $today_file = $now->strftime($FILE_FORMAT);
+
+if ( $now->hour >= 12 && ! -f $today_file ) {
+    system('touch', $today_file);
+}
