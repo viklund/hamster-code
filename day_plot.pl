@@ -62,7 +62,7 @@ sub calculate {
         if ( $tp > $times[$cluster[0]]-1 && $tp < $times[$cluster[1]]+1 && $cluster[0] != $cluster[1] ) {
             $speed = ($cluster[1] - $cluster[0])/($times[$cluster[1]] - $times[$cluster[0]]);
             $speed *= ONE_MINUTE;
-            $speed = sprintf "%.0f", $speed;
+            $speed = (sprintf "%.0f", $speed/5)*5;
         }
         if ( @speed>1 && $speed == $speed[-1][1] && $speed == $speed[-2][1] ) {
             $speed[-1][0] = $tp;
